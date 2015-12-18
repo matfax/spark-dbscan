@@ -16,4 +16,6 @@ resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
 resolvers += Resolver.sonatypeRepo("public")
 
-publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
+resolvers += "Local Maven Repository" at "file:///Users/zafshar/.m2/repository"
+
+publishTo := Some(Resolver.file("file",  new File("/Users/zafshar/.m2/repository")))
