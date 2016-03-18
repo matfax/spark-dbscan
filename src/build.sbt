@@ -2,7 +2,7 @@ name := "spark_dbscan"
 
 organization := "org.alitouka"
 
-version := "0.0.4"
+version := "0.0.4-SNAPSHOT"
 
 scalaVersion := "2.11.6"
 
@@ -18,6 +18,11 @@ resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
 resolvers += Resolver.sonatypeRepo("public")
 
-resolvers += "Local Maven Repository" at "file:///Users/zafshar/.m2/repository"
+//resolvers += "Local Maven Repository" at "file:///Users/zafshar/.m2/repository"
 
-publishTo := Some(Resolver.file("file",  new File("/Users/zafshar/.m2/repository")))
+//publishTo := Some(Resolver.file("file",  new File("/Users/zafshar/.m2/repository")))
+publishTo := Some("Local Nexus" at "http://localhost:8081/content/repositories/snapshots")
+
+// fun fact the first parameter in Credentials MUST read EXACTLY:
+// "Sonatype Nexus Repository Manager"
+credentials += Credentials("Sonatype Nexus Repository Manager", "localhost", "deployment", "deployment123")
