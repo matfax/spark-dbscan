@@ -1,3 +1,7 @@
+#DBSCAN for Spark
+
+[![](https://jitpack.io/v/matfax/spark-dbscan.svg)](https://jitpack.io/#matfax/spark-dbscan)
+
 Spark DBSCAN is an implementation of the [DBSCAN clustering algorithm](http://en.wikipedia.org/wiki/DBSCAN) on top of [Apache Spark](http://spark.apache.org/) . It also includes 2 simple tools which will help you choose parameters of the DBSCAN algorithm.
 
 ![Clusters identified by the DBSCAN algorithm](https://github.com/alitouka/spark_dbscan/raw/master/wiki/img/finally_clustered.png)
@@ -17,12 +21,4 @@ Learn more about:
 ![Performance chart](https://github.com/alitouka/spark_dbscan/raw/master/wiki/img/performance_chart_0_0_2.png)
 
 ## Credits
- I was glad to receive contributions from other people and I'd like to say thank you:
- * Mark Geraty - for fixing a bug with Java RDDs;
- * [@agrinh](https://github.com/agrinh) - for adding compatibility with Spark 1.1.0
-
-## Contact me
-Any questions, comments, suggestions as well as criticism are welcome! You can contact me via:
-
- * Email: spark.dbscan@gmail.com
- * LinkedIn: https://www.linkedin.com/pub/aliaksei-litouka/59/95a/957
+This repository is a fork from the original [spark_dbscan](https://github.com/alitouka/spark_dbscan) of **alitouka**.
