@@ -1,9 +1,8 @@
 package org.apache.spark.dbscan.spatial
 
-import org.apache.spark.dbscan.{PairOfAdjacentBoxIds, BoxId, DbscanSettings, RawDataSet}
 import org.apache.spark.dbscan.spatial.rdd.{BoxPartitioner, PartitioningSettings}
+import org.apache.spark.dbscan.{BoxId, DbscanSettings, PairOfAdjacentBoxIds, RawDataSet}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.SparkContext._
 
 /** Calculates box-shaped regions for density-based partitioning (see [[org.apache.spark.dbscan.spatial.rdd.BoxPartitioner]] )
   * and for fast lookup of point's neighbors (see [[org.apache.spark.dbscan.spatial.PartitionIndex]]
@@ -18,7 +17,7 @@ private [dbscan] class BoxCalculator (val data: RawDataSet) {
                                  dbscanSettings: DbscanSettings = new DbscanSettings ()): (Iterable[Box], Box) = {
 
     val datasetBounds = calculateBounds(data, numberOfDimensions)
-    val rootBox = new Box (datasetBounds.toArray)
+    val rootBox = Box (datasetBounds.toArray)
     val boxTree = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
 
     val broadcastBoxTree = data.sparkContext.broadcast(boxTree)
@@ -48,7 +47,7 @@ private [dbscan] class BoxCalculator (val data: RawDataSet) {
     pt.coordinates.length
   }
 
-  def calculateBoundingBox: Box = new Box (calculateBounds (data, numberOfDimensions).toArray)
+  def calculateBoundingBox: Box = Box (calculateBounds (data, numberOfDimensions).toArray)
 
   private [dbscan] def calculateBounds (ds: RawDataSet, dimensions: Int): List[BoundsInOneDimension] = {
     val minPoint = Point (Array.fill (dimensions)(Double.MaxValue))
@@ -144,7 +143,7 @@ private [dbscan] object BoxCalculator {
     val splits = rootBox.bounds.map ( _.split(maxSplits, dbscanSettings) )
     val combinations = BoxCalculator.generateCombinationsOfSplits(splits.toList, dimensions-1)
 
-    for (i <- combinations.indices) yield new Box (combinations(i).reverse , i+1)
+    for (i <- combinations.indices) yield Box(combinations(i).reverse, i+1)
   }
 
   private [dbscan] def assignAdjacentBoxes (boxesWithEnoughPoints: Iterable[Box]) = {
@@ -189,12 +188,12 @@ private [dbscan] object BoxCalculator {
       }
     }
 
-    new Box(embracingBoxBounds.toArray)
+    Box(embracingBoxBounds.toArray)
   }
 
   private [dbscan] def generateEmbracingBoxFromAdjacentBoxes (rootBox: Box): Box = {
 
-    var rootAndAdjacentBoxes = rootBox :: rootBox.adjacentBoxes.filter {
+    var rootAndAdjacentBoxes = rootBox +: rootBox.adjacentBoxes.filter {
       x => BoxCalculator.shouldAdjacentBoxBeIncludedInPartition(rootBox.boxId, x.boxId)
     }
 

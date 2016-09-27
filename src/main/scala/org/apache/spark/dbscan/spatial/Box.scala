@@ -1,6 +1,6 @@
 package org.apache.spark.dbscan.spatial
 
-import org.apache.spark.dbscan.{BoxId, DbscanSettings}
+import org.apache.spark.dbscan._
 import org.apache.spark.dbscan.util.math.DoubleComparisonOperations._
 
 /** Represents a box-shaped region in multi-dimensional space
@@ -9,68 +9,76 @@ import org.apache.spark.dbscan.util.math.DoubleComparisonOperations._
   * @param boxId A unique identifier of this box
   * @param partitionId Identifier of a data set partition which corresponds to this box
   */
-private [dbscan] class Box (val bounds: Array[BoundsInOneDimension], val boxId: BoxId = 0, val partitionId: Int = -1, var adjacentBoxes: List[Box] = Nil)
-  extends Serializable with Ordered[Box] {
+abstract case class Box private[Box] (bounds: Array[BoundsInOneDimension],
+                                      boxId: BoxId = 0,
+                                      partitionId: Int = -1,
+                                      var adjacentBoxes: Seq[Box] = Nil)
+    extends Serializable
+    with Ordered[Box] {
 
-  val centerPoint = calculateCenter (bounds)
+  private def readResolve(): Object =
+    Box.apply(bounds, boxId, partitionId, adjacentBoxes)
+  def copy(coord: Double*): Box =
+    Box.apply(bounds, boxId, partitionId, adjacentBoxes)
 
-  def this (b: List[BoundsInOneDimension], boxId: Int) = this (b.toArray, boxId)
+  val centerPoint = calculateCenter(bounds)
 
-  def this (b: Box) = this (b.bounds, b.boxId, b.partitionId, b.adjacentBoxes)
-
-  def this (b: BoundsInOneDimension*) = this (b.toArray)
-
-  def splitAlongLongestDimension (numberOfSplits: Int,
-      idGenerator: BoxIdGenerator = new BoxIdGenerator(this.boxId)): Iterable[Box] = {
+  def splitAlongLongestDimension(numberOfSplits: Int,
+                                 idGenerator: BoxIdGenerator =
+                                   new BoxIdGenerator(this.boxId))
+    : Iterable[Box] = {
 
     val (longestDimension, idx) = findLongestDimensionAndItsIndex()
 
-    val beforeLongest = if (idx > 0) bounds.take (idx) else Array[BoundsInOneDimension] ()
-    val afterLongest = if (idx < bounds.length-1) bounds.drop(idx+1) else Array[BoundsInOneDimension] ()
+    val beforeLongest =
+      if (idx > 0) bounds.take(idx) else Array[BoundsInOneDimension]()
+    val afterLongest =
+      if (idx < bounds.length - 1) bounds.drop(idx + 1)
+      else Array[BoundsInOneDimension]()
     val splits = longestDimension.split(numberOfSplits)
 
-    splits.map {
-      s => {
+    splits.map { s =>
+      {
         val newBounds = (beforeLongest :+ s) ++: afterLongest
-        new Box (newBounds, idGenerator.getNextId)
+        Box(newBounds, idGenerator.getNextId)
       }
     }
   }
 
-  def isPointWithin (pt: Point) = {
+  def isPointWithin(pt: Point) = {
 
-    assert (bounds.length == pt.coordinates.length)
+    assert(bounds.length == pt.coordinates.length)
 
-    bounds.zip (pt.coordinates).forall( x => x._1.isNumberWithin(x._2) )
+    bounds.zip(pt.coordinates).forall(x => x._1.isNumberWithin(x._2))
   }
 
-  def isBigEnough (settings: DbscanSettings): Boolean = {
+  def isBigEnough(settings: DbscanSettings): Boolean = {
 
-    bounds.forall( _.length >= 2*settings.epsilon )
+    bounds.forall(_.length >= 2 * settings.epsilon)
   }
 
-  def extendBySizeOfOtherBox (b: Box): Box = {
+  def extendBySizeOfOtherBox(b: Box): Box = {
 
-    assert (this.bounds.length == b.bounds.length)
+    assert(this.bounds.length == b.bounds.length)
 
-    val newBounds = this.bounds.zip (b.bounds).map ( x => x._1.extend(x._2) )
-    new Box (newBounds)
+    val newBounds = this.bounds.zip(b.bounds).map(x => x._1.extend(x._2))
+    Box(newBounds)
   }
 
-  def withId (newId: BoxId): Box = {
-    new Box (this.bounds, newId, this.partitionId, this.adjacentBoxes)
+  def withId(newId: BoxId): Box = {
+    Box(this.bounds, newId, this.partitionId, this.adjacentBoxes)
   }
 
-  def withPartitionId (newPartitionId: Int): Box = {
-    new Box (this.bounds, this.boxId, newPartitionId, this.adjacentBoxes)
+  def withPartitionId(newPartitionId: Int): Box = {
+    Box(this.bounds, this.boxId, newPartitionId, this.adjacentBoxes)
   }
 
   override def toString: String = {
     "Box " + bounds.mkString(", ") + "; id = " + boxId + "; partition = " + partitionId
   }
 
-  private [dbscan] def findLongestDimensionAndItsIndex ()
-    :(BoundsInOneDimension, Int) = {
+  private[dbscan] def findLongestDimensionAndItsIndex()
+    : (BoundsInOneDimension, Int) = {
 
     var idx: Int = 0
     var foundBound: BoundsInOneDimension = null
@@ -91,36 +99,37 @@ private [dbscan] class Box (val bounds: Array[BoundsInOneDimension], val boxId: 
     (foundBound, idx)
   }
 
-  private [dbscan] def calculateCenter (b: Array[BoundsInOneDimension]): Point = {
-    val centerCoordinates = b.map ( x => x.lower + (x.upper - x.lower) / 2 )
-    Point (centerCoordinates)
+  private[dbscan] def calculateCenter(b: Array[BoundsInOneDimension]): Point = {
+    val centerCoordinates = b.map(x => x.lower + (x.upper - x.lower) / 2)
+    Point(centerCoordinates)
   }
 
-  def addAdjacentBox (b: Box) = {
-    adjacentBoxes = b :: adjacentBoxes
+  def addAdjacentBox(b: Box) = {
+    adjacentBoxes = b +: adjacentBoxes
   }
 
   override def compare(that: Box): Int = {
-    assert (this.bounds.length == that.bounds.length)
+    assert(this.bounds.length == that.bounds.length)
 
     centerPoint.compareTo(that.centerPoint)
   }
 
-  def isAdjacentToBox (that: Box): Boolean = {
+  def isAdjacentToBox(that: Box): Boolean = {
 
-    assert (this.bounds.length == that.bounds.length)
+    assert(this.bounds.length == that.bounds.length)
 
-    val (adjacentBounds, notAdjacentBounds) = this.bounds.zip(that.bounds).partition {
-      x => {
-        x._1.lower ~~ x._2.lower ||
-        x._1.lower ~~ x._2.upper ||
-        x._1.upper ~~ x._2.upper ||
-        x._1.upper ~~ x._2.lower
+    val (adjacentBounds, notAdjacentBounds) =
+      this.bounds.zip(that.bounds).partition { x =>
+        {
+          x._1.lower ~~ x._2.lower ||
+          x._1.lower ~~ x._2.upper ||
+          x._1.upper ~~ x._2.upper ||
+          x._1.upper ~~ x._2.lower
+        }
       }
-    }
 
-    adjacentBounds.length >= 1 && notAdjacentBounds.forall {
-      x => {
+    adjacentBounds.length >= 1 && notAdjacentBounds.forall { x =>
+      {
         (x._1.lower >~ x._2.lower && x._1.upper <~ x._2.upper) || (x._2.lower >~ x._1.lower && x._2.upper <~ x._1.upper)
       }
     }
@@ -128,9 +137,26 @@ private [dbscan] class Box (val bounds: Array[BoundsInOneDimension], val boxId: 
 }
 
 object Box {
-  def apply (centerPoint: Point, size: Box): Box = {
 
-    val newBounds = centerPoint.coordinates.map ( c => new BoundsInOneDimension(c, c, true) ).toArray
-    new Box (newBounds).extendBySizeOfOtherBox(size)
+  def apply(bounds: Array[BoundsInOneDimension],
+            boxId: BoxId = 0,
+            partitionId: Int = -1,
+            adjacentBoxes: Seq[Box] = Nil) =
+    new Box(bounds, boxId, partitionId, adjacentBoxes) {}
+
+  def apply(centerPoint: Point, size: Box): Box = {
+    val newBounds = centerPoint.coordinates
+      .map(c => new BoundsInOneDimension(c, c, true))
+      .toArray
+    Box(newBounds).extendBySizeOfOtherBox(size)
   }
+
+  def apply(b: Seq[BoundsInOneDimension], boxId: Int) =
+    new Box(b.toArray, boxId) {}
+
+  def apply(b: Box) =
+    new Box(b.bounds, b.boxId, b.partitionId, b.adjacentBoxes) {}
+
+  def apply(b: BoundsInOneDimension*) = new Box(b.toArray) {}
+
 }

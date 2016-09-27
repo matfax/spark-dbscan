@@ -23,7 +23,7 @@ class PartitionIndexSuite extends SuiteBase with TestDatasets with DistanceCalcu
 
   test("PartitionIndex should build 3-level tree") {
 
-    val boundingBox = new Box ((0.0, 3.0), (0.0, 2.0), (0.0, 2.0))
+    val boundingBox = Box ((0.0, 3.0), (0.0, 2.0), (0.0, 2.0))
     val dbscanSettings = new DbscanSettings ().withEpsilon (0.5)
 
     val root = PartitionIndex.buildTree (boundingBox, new PartitioningSettings (), dbscanSettings)
@@ -50,7 +50,7 @@ class PartitionIndexSuite extends SuiteBase with TestDatasets with DistanceCalcu
   }
 
   test("PartitionIndex should put points into correct boxes") {
-    val boundingBox = new Box ((0.0, 3.0), (0.0, 2.0), (0.0, 2.0))
+    val boundingBox = Box ((0.0, 3.0), (0.0, 2.0), (0.0, 2.0))
     val dbscanSettings = new DbscanSettings ().withEpsilon (0.5)
 
     val points = Array (Point(0.2, 0.2, 0.2), Point(0.5, 0.5, 0.5),
@@ -76,7 +76,7 @@ class PartitionIndexSuite extends SuiteBase with TestDatasets with DistanceCalcu
 
     val dbscanSettings = new DbscanSettings ().withEpsilon (0.5)
 
-    val boundingBox2D = new Box ((0.0, 4.0), (0.0, 4.0))
+    val boundingBox2D = Box ((0.0, 4.0), (0.0, 4.0))
     val points2D = Array (Point(0.5, 0.5), Point(1.5, 0.5), Point(1.5, 1.5), Point(3.5, 0.5),
       Point(1.5, 3.5), Point(3.5, 3.5))
 
@@ -90,7 +90,7 @@ class PartitionIndexSuite extends SuiteBase with TestDatasets with DistanceCalcu
     checkNumberOfAdjacentBoxes(idx2D, points2D(4), 5)
     checkNumberOfAdjacentBoxes(idx2D, points2D(5), 3)
 
-    val boundingBox3D = new Box ((0.0, 4.0), (0.0, 4.0), (0.0, 4.0))
+    val boundingBox3D = Box ((0.0, 4.0), (0.0, 4.0), (0.0, 4.0))
     val points3D = Array (Point(0.5, 0.5, 0.5), Point(1.5, 0.5, 0.5), Point(1.5, 1.5, 1.5), Point(3.5, 0.5, 0.5),
       Point(1.5, 3.5, 0.5), Point(3.5, 3.5, 3.5))
 

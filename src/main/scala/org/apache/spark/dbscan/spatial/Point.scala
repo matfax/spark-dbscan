@@ -22,19 +22,19 @@ abstract case class Point private[Point] (
     with Ordered[Point] {
 
   private def readResolve(): Object =
-    Point.apply(coordinates: PointCoordinates,
-                pointId: PointId,
-                boxId: BoxId,
-                distanceFromOrigin: Double,
-                precomputedNumberOfNeighbors: Long,
-                clusterId: ClusterId)
+    Point.apply(coordinates,
+                pointId,
+                boxId,
+                distanceFromOrigin,
+                precomputedNumberOfNeighbors,
+                clusterId)
   def copy(coord: Double*): Point =
-    Point.apply(coordinates: PointCoordinates,
-                pointId: PointId,
-                boxId: BoxId,
-                distanceFromOrigin: Double,
-                precomputedNumberOfNeighbors: Long,
-                clusterId: ClusterId)
+    Point.apply(coordinates,
+                pointId,
+                boxId,
+                distanceFromOrigin,
+                precomputedNumberOfNeighbors,
+                clusterId)
 
   def this(coords: Array[Double]) = this(new PointCoordinates(coords))
 
@@ -149,10 +149,10 @@ object Point {
 
   def apply(pt: Point) =
     new Point(pt.coordinates,
-      pt.pointId,
-      pt.boxId,
-      pt.distanceFromOrigin,
-      pt.precomputedNumberOfNeighbors,
-      pt.clusterId) {}
+              pt.pointId,
+              pt.boxId,
+              pt.distanceFromOrigin,
+              pt.precomputedNumberOfNeighbors,
+              pt.clusterId) {}
 
 }

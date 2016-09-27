@@ -23,7 +23,7 @@ class BoxCalculatorSuite extends SuiteBase {
                                                               // because boxes will become too small
                                                               // at deeper levels
 
-    val rootBox = new Box ((0.0, 6.0), (0.0, 2.0))
+    val rootBox = Box ((0.0, 6.0), (0.0, 2.0))
 
     val boxTreeRoot = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
 
@@ -51,7 +51,7 @@ class BoxCalculatorSuite extends SuiteBase {
     val dbscanSettings = new DbscanSettings ().withEpsilon(1)
     val partitioningSettings = new PartitioningSettings(2, 8)
 
-    val rootBox = new Box ((0.0, 8.0), (0.0, 2.0))
+    val rootBox = Box ((0.0, 8.0), (0.0, 2.0))
 
     val boxTreeRoot = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
 
@@ -79,7 +79,7 @@ class BoxCalculatorSuite extends SuiteBase {
     val dbscanSettings = new DbscanSettings ().withEpsilon(1)
     val partitioningSettings = new PartitioningSettings(2, 8)
 
-    val rootBox = new Box ((0.0, 8.0), (0.0, 2.0))
+    val rootBox = Box ((0.0, 8.0), (0.0, 2.0))
 
     val boxTreeRoot = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
 
@@ -119,7 +119,7 @@ class BoxCalculatorSuite extends SuiteBase {
     val dbscanSettings = new DbscanSettings ().withEpsilon(1)
     val partitioningSettings = new PartitioningSettings(2, 8)
 
-    val rootBox = new Box ((0.0, 8.0), (0.0, 2.0))
+    val rootBox = Box ((0.0, 8.0), (0.0, 2.0))
 
     val root1 = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
     val root2 = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
@@ -167,7 +167,7 @@ class BoxCalculatorSuite extends SuiteBase {
 
   test("BoxCalculator should split a box into 6 boxes") {
 
-    val bigBox = new Box ((0.0, 3.0, true), (0.0, 2.0, true))
+    val bigBox = Box ((0.0, 3.0, true), (0.0, 2.0, true))
     val settings = new DbscanSettings ().withEpsilon(0.5)
 
     val smallBoxes = BoxCalculator.splitBoxIntoEqualBoxes(bigBox, 3, settings)
@@ -176,7 +176,7 @@ class BoxCalculatorSuite extends SuiteBase {
   }
 
   test("BoxCalculator should split a box into 2 boxes") {
-    val bigBox = new Box ((0.0, 2.0, true), (0.0, 1.0, true))
+    val bigBox = Box ((0.0, 2.0, true), (0.0, 1.0, true))
     val settings = new DbscanSettings ().withEpsilon(0.5)
 
     val smallBoxes = BoxCalculator.splitBoxIntoEqualBoxes(bigBox, 3, settings)
@@ -186,7 +186,7 @@ class BoxCalculatorSuite extends SuiteBase {
 
   test("BoxCalculator should split a larger box into a larger number of small boxes") {
     val settings = new DbscanSettings ().withEpsilon(0.5)
-    val bigBox = new Box ((0.0, 3.0, true), (0.0, 2.0, true))
+    val bigBox = Box ((0.0, 3.0, true), (0.0, 2.0, true))
     val maxSplits = 3
 
     val smallBoxes = BoxCalculator.splitBoxIntoEqualBoxes(bigBox, maxSplits, settings).toArray
@@ -206,10 +206,10 @@ class BoxCalculatorSuite extends SuiteBase {
 
   test ("BoxCalculator should find adjacent boxes correctly") {
 
-    val b1 = new Box ((0.0, 1.0), (0.0, 1.0)).withId(1)
-    val b2 = new Box ((1.0, 2.0), (0.0, 1.0)).withId(2)
-    val b3 = new Box ((2.0, 3.0), (0.0, 1.0)).withId(3)
-    val b4 = new Box ((0.0, 3.0), (1.0, 2.0)).withId(4)
+    val b1 = Box ((0.0, 1.0), (0.0, 1.0)).withId(1)
+    val b2 = Box ((1.0, 2.0), (0.0, 1.0)).withId(2)
+    val b3 = Box ((2.0, 3.0), (0.0, 1.0)).withId(3)
+    val b4 = Box ((0.0, 3.0), (1.0, 2.0)).withId(4)
     val allBoxes = b1 :: b2 :: b3 :: b4 :: Nil
 
     BoxCalculator.assignAdjacentBoxes (allBoxes)
@@ -239,11 +239,11 @@ class BoxCalculatorSuite extends SuiteBase {
   }
 
   test ("BoxCalculator should generate embracing box") {
-    val rootBox = new Box((0.0, 1.0), (0.0, 1.0)).withId(10)
-    val boxBelow = new Box ((0.0, 1.0), (-1.0, 0.0)).withId (11)
-    val boxAbove = new Box ((0.0, 1.0), (1.0, 2.0)).withId (12)
-    val boxOnLeft = new Box ((-1.0, 0.0), (0.0, 1.0)).withId (14)
-    val boxOnRight = new Box ((1.0, 2.0), (0.0, 1.0)).withId (9) // Id is less than root box id, so it should not
+    val rootBox = Box((0.0, 1.0), (0.0, 1.0)).withId(10)
+    val boxBelow = Box ((0.0, 1.0), (-1.0, 0.0)).withId (11)
+    val boxAbove = Box ((0.0, 1.0), (1.0, 2.0)).withId (12)
+    val boxOnLeft = Box ((-1.0, 0.0), (0.0, 1.0)).withId (14)
+    val boxOnRight = Box ((1.0, 2.0), (0.0, 1.0)).withId (9) // Id is less than root box id, so it should not
                                                                   // be included into the embracing box
 
     BoxCalculator.assignAdjacentBoxes(rootBox :: boxBelow :: boxAbove :: boxOnLeft :: boxOnRight :: Nil)

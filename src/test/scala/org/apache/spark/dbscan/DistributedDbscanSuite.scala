@@ -1,20 +1,18 @@
 package org.apache.spark.dbscan
 
-import org.apache.spark.dbscan.spatial._
-import org.apache.spark.dbscan.spatial.rdd.{BoxPartitioner, PointsPartitionedByBoxesRDD}
 import org.apache.spark.dbscan.spatial.BoundsInOneDimension._
-import org.apache.spark.dbscan.spatial.{DistanceAnalyzer, Point, PointSortKey}
 import org.apache.spark.dbscan.spatial.rdd.{BoxPartitioner, PointsPartitionedByBoxesRDD}
+import org.apache.spark.dbscan.spatial.{DistanceAnalyzer, Point, PointSortKey, _}
 
 class DistributedDbscanSuite extends DbscanSuiteBase with TestDatasets {
 
   val ordering = implicitly[Ordering[PointSortKey]]
 
-  val bigBox = new Box ((-Double.MaxValue, Double.MaxValue), (-Double.MaxValue, Double.MaxValue))
+  val bigBox = Box ((-Double.MaxValue, Double.MaxValue), (-Double.MaxValue, Double.MaxValue))
   val boxes = BoxPartitioner.assignPartitionIdsToBoxes(List (bigBox))
   val broadcastBoxes = sc.broadcast(boxes)
   val broadcastNumberOfDimensions = sc.broadcast(2)
-  val defaultBoundingBox = new Box ((0.0, 5.0, true), (0.0, 5.0, true))
+  val defaultBoundingBox = Box ((0.0, 5.0, true), (0.0, 5.0, true))
 
   val pointsInDifferentBoxes = Array (create2DPoint (0.1, 0.9, 1, 4, 1, 1), create2DPoint (0.2, 0.9, 2, 4, 1, 2),
     create2DPoint (0.1, 1.1, 3, 4, 2, 3), create2DPoint (0.2, 1.1, 4, 4, 2, 4),
@@ -164,7 +162,7 @@ class DistributedDbscanSuite extends DbscanSuiteBase with TestDatasets {
     val sortedIterator = sortDataset (dataset0_1, settings)
     val impl = new DistributedDbscan(settings)
     val clusteredIterator = impl.findClustersInOnePartition(sortedIterator,
-      new Box ((0.0, 16.0, true), (0.0, 16.0, true)))
+      Box ((0.0, 16.0, true), (0.0, 16.0, true)))
 
     val (noise, clusters) = groupPointsAndSeparateNoiseFromClusters(clusteredIterator)
 

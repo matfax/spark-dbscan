@@ -1,14 +1,11 @@
 package org.apache.spark.dbscan.spatial
 
-import org.apache.spark.dbscan.spatial.rdd.PartitioningSettings
 import org.apache.spark.dbscan.DbscanSettings
-
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import org.apache.spark.dbscan.spatial.rdd.PartitioningSettings
+import org.apache.spark.dbscan.util.debug.Clock
 import org.apache.spark.dbscan.util.math.DoubleComparisonOperations._
 
-import scala.collection.parallel.ParIterable
-import org.apache.spark.dbscan.util.debug.Clock
-import org.apache.spark.dbscan.DbscanSettings
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 /** An indexing data structure which allows fast lookup of point's neighbors
   *
@@ -200,7 +197,7 @@ private [dbscan] object PartitionIndex extends DistanceCalculation {
       }
     }
 
-    new Box (dimensions.toArray)
+    Box (dimensions.toArray)
   }
 
 

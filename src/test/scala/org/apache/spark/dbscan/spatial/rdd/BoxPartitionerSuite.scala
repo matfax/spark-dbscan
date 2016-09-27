@@ -7,9 +7,9 @@ import org.apache.spark.dbscan.spatial.Box
 class BoxPartitionerSuite extends SuiteBase {
 
   test ("BoxPartitioner properly convert box ids to partition ids and vice versa") {
-    val boxes = Array (new Box ((0.0, 1.0), (0.0, 1.0)).withId(10),
-      new Box ((1.0, 2.0), (0.0, 0.1)).withId(20),
-      new Box ((2.0, 3.0), (0.0, 0.1)).withId(30))
+    val boxes = Array (Box ((0.0, 1.0), (0.0, 1.0)).withId(10),
+      Box ((1.0, 2.0), (0.0, 0.1)).withId(20),
+      Box ((2.0, 3.0), (0.0, 0.1)).withId(30))
 
     val boxesWithPartitionIds = BoxPartitioner.assignPartitionIdsToBoxes(boxes)
 
