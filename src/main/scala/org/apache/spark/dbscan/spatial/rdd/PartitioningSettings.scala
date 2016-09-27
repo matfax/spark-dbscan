@@ -36,7 +36,7 @@ object PartitioningSettings {
 
   def DefaultNumberOfLevels: Int = 10
 
-  def DefaultNumberOfPointsInBox: Long = 50000
+  def DefaultNumberOfPointsInBox: Long = 9223372036854775807L
 
   def DefaultNumberOfSplitsWithinPartition = 8
 
