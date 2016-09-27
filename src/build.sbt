@@ -1,18 +1,28 @@
-name := "spark_dbscan"
+name := "spark-dbscan"
 
-organization := "org.alitouka"
+organization := "org.apache"
 
-version := "0.0.4-SNAPSHOT"
+version := "0.2.0"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.8"
 
-libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "1.6.0" % "provided"
+libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.11.8"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.1.3" % "test"
+libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.8"
 
-libraryDependencies += "org.apache.commons" % "commons-math3" % "3.2"
+libraryDependencies += "org.scala-lang.modules" % "scala-parser-combinators_2.11" % "1.0.4"
 
-libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
+// https://mvnrepository.com/artifact/org.apache.spark/spark-core_2.11
+libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "2.0.0"
+
+// https://mvnrepository.com/artifact/org.apache.spark/spark-mllib_2.11
+libraryDependencies += "org.apache.spark" % "spark-mllib_2.11" % "2.0.0"
+
+libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.6" % "test"
+
+libraryDependencies += "org.apache.commons" % "commons-math3" % "3.4.1"
+
+libraryDependencies += "com.github.scopt" %% "scopt" % "3.5.0"
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
