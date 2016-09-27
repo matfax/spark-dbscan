@@ -1,7 +1,6 @@
 package org.apache.spark.dbscan.spatial
 
-import org.apache.spark.dbscan._
-import org.apache.spark.dbscan.{ClusterId, DbscanModel}
+import org.apache.spark.dbscan.{ClusterId, DbscanModel, _}
 
 /** Represents a point in multi-dimensional space and metadata required by the distributed DBSCAN algorithm
   *
@@ -12,18 +11,32 @@ import org.apache.spark.dbscan.{ClusterId, DbscanModel}
   * @param precomputedNumberOfNeighbors Number of point's neighbors
   * @param clusterId ID of a cluster which this points belongs to
   */
-case class Point(coordinates: PointCoordinates,
-                 pointId: PointId = 0,
-                 boxId: BoxId = 0,
-                 distanceFromOrigin: Double = 0.0,
-                 precomputedNumberOfNeighbors: Long = 0,
-                 clusterId: ClusterId = DbscanModel.UndefinedCluster)
+abstract case class Point private[Point] (
+    coordinates: PointCoordinates,
+    pointId: PointId = 0,
+    boxId: BoxId = 0,
+    distanceFromOrigin: Double = 0.0,
+    precomputedNumberOfNeighbors: Long = 0,
+    clusterId: ClusterId = DbscanModel.UndefinedCluster)
     extends Serializable
     with Ordered[Point] {
 
-  def this(coords: Array[Double]) = this(new PointCoordinates(coords))
+  private def readResolve(): Object =
+    Point.apply(coordinates: PointCoordinates,
+                pointId: PointId,
+                boxId: BoxId,
+                distanceFromOrigin: Double,
+                precomputedNumberOfNeighbors: Long,
+                clusterId: ClusterId)
+  def copy(coord: Double*): Point =
+    Point.apply(coordinates: PointCoordinates,
+                pointId: PointId,
+                boxId: BoxId,
+                distanceFromOrigin: Double,
+                precomputedNumberOfNeighbors: Long,
+                clusterId: ClusterId)
 
-  def apply(coords: Array[Double]): Point = this(coords)
+  def this(coords: Array[Double]) = this(new PointCoordinates(coords))
 
   def this(pt: Point) =
     this(pt.coordinates,
@@ -35,51 +48,49 @@ case class Point(coordinates: PointCoordinates,
 
   def this(coords: Double*) = this(new PointCoordinates(coords.toArray))
 
-  def apply(coords: Double*): Point = this(coords: _*)
-
   def withPointId(newId: PointId) = {
     Point(this.coordinates,
-      newId,
-      this.boxId,
-      this.distanceFromOrigin,
-      this.precomputedNumberOfNeighbors,
-      this.clusterId)
+          newId,
+          this.boxId,
+          this.distanceFromOrigin,
+          this.precomputedNumberOfNeighbors,
+          this.clusterId)
   }
 
   def withBoxId(newBoxId: BoxId) = {
     Point(this.coordinates,
-      this.pointId,
-      newBoxId,
-      this.distanceFromOrigin,
-      this.precomputedNumberOfNeighbors,
-      this.clusterId)
+          this.pointId,
+          newBoxId,
+          this.distanceFromOrigin,
+          this.precomputedNumberOfNeighbors,
+          this.clusterId)
   }
 
   def withDistanceFromOrigin(newDistance: Double) = {
     Point(this.coordinates,
-      this.pointId,
-      this.boxId,
-      newDistance,
-      this.precomputedNumberOfNeighbors,
-      this.clusterId)
+          this.pointId,
+          this.boxId,
+          newDistance,
+          this.precomputedNumberOfNeighbors,
+          this.clusterId)
   }
 
   def withNumberOfNeighbors(newNumber: Long) = {
     Point(this.coordinates,
-      this.pointId,
-      this.boxId,
-      this.distanceFromOrigin,
-      newNumber,
-      this.clusterId)
+          this.pointId,
+          this.boxId,
+          this.distanceFromOrigin,
+          newNumber,
+          this.clusterId)
   }
 
   def withClusterId(newId: ClusterId) = {
     Point(this.coordinates,
-      this.pointId,
-      this.boxId,
-      this.distanceFromOrigin,
-      this.precomputedNumberOfNeighbors,
-      newId)
+          this.pointId,
+          this.boxId,
+          this.distanceFromOrigin,
+          this.precomputedNumberOfNeighbors,
+          newId)
   }
 
   override def equals(that: Any): Boolean = {
@@ -115,4 +126,33 @@ case class Point(coordinates: PointCoordinates,
 
     result
   }
+}
+
+object Point {
+  def apply(coordinates: PointCoordinates,
+            pointId: PointId = 0,
+            boxId: BoxId = 0,
+            distanceFromOrigin: Double = 0.0,
+            precomputedNumberOfNeighbors: Long = 0,
+            clusterId: ClusterId = DbscanModel.UndefinedCluster) =
+    new Point(coordinates,
+              pointId,
+              boxId,
+              distanceFromOrigin,
+              precomputedNumberOfNeighbors,
+              clusterId) {}
+
+  def apply(coord: Double*): Point =
+    new Point(coord: _*) {}
+
+  def apply(coords: Array[Double]) = new Point(coords) {}
+
+  def apply(pt: Point) =
+    new Point(pt.coordinates,
+      pt.pointId,
+      pt.boxId,
+      pt.distanceFromOrigin,
+      pt.precomputedNumberOfNeighbors,
+      pt.clusterId) {}
+
 }

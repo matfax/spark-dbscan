@@ -21,7 +21,7 @@ object IOHelper {
 
     rawData.map (
       line => {
-        new Point (line.split(separator).map( _.toDouble ))
+        Point (line.split(separator).map( _.toDouble ))
       }
     )
   }

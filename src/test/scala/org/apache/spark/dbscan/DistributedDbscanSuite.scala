@@ -336,7 +336,7 @@ class DistributedDbscanSuite extends DbscanSuiteBase with TestDatasets {
   }
 
   private def create2DPoint (x: Double, y: Double, id: PointId, neighbors: Int, boxId: BoxId, cluster: ClusterId): Point = {
-    new Point (new PointCoordinates (Array (x, y)), id, boxId, Math.sqrt (x*x+y*y), neighbors, cluster)
+    Point (new PointCoordinates (Array (x, y)), id, boxId, Math.sqrt (x*x+y*y), neighbors, cluster)
   }
 
 

@@ -6,10 +6,10 @@ import org.apache.spark.dbscan.spatial.Point
 class PointSuite extends SuiteBase {
   test ("Point should determine if it is 'greater' or 'less' than other point") {
 
-    val pt1 = new Point (1, 2, 3)
-    val pt2 = new Point (1, 2, 3)
-    val pt3 = new Point (1, 3, 2)
-    val pt4 = new Point (1, 1, 4)
+    val pt1 = Point (1, 2, 3)
+    val pt2 = Point (1, 2, 3)
+    val pt3 = Point (1, 3, 2)
+    val pt4 = Point (1, 1, 4)
 
     pt1.compareTo(pt2) should be (0)
 

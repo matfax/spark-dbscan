@@ -8,56 +8,56 @@ class BoxSuite extends SuiteBase {
 
     val box = new Box ((0.0, 1.0), (0.0, 2.0))
 
-    assert (box.isPointWithin(new Point (0.5, 1.0)))
-    assert (box.isPointWithin(new Point (0.0001, 0.0001)))
-    assert (box.isPointWithin(new Point (0.9999, 1.9999)))
+    assert (box.isPointWithin(Point(0.5, 1.0)))
+    assert (box.isPointWithin(Point(0.0001, 0.0001)))
+    assert (box.isPointWithin(Point(0.9999, 1.9999)))
   }
 
   test("Box should report that points lying on its lower bounds are also within it") {
     val box = new Box ((0.0, 1.0), (0.0, 2.0))
 
-    assert (box.isPointWithin(new Point (0.0, 0.0)))
-    assert (box.isPointWithin(new Point (0.0, 1.0)))
-    assert (box.isPointWithin(new Point (0.5, 0.0)))
+    assert (box.isPointWithin(Point(0.0, 0.0)))
+    assert (box.isPointWithin(Point(0.0, 1.0)))
+    assert (box.isPointWithin(Point(0.5, 0.0)))
   }
 
   test("Box should report that points lying on its upper bounds are outside of it, unless configured otherwise") {
     val box1 = new Box ((0.0, 1.0), (0.0, 2.0))
 
-    assert (!box1.isPointWithin(new Point (1.0, 1.0)))
-    assert (!box1.isPointWithin(new Point (1.0, 2.0)))
-    assert (!box1.isPointWithin(new Point (0.5, 2.0)))
+    assert (!box1.isPointWithin(Point(1.0, 1.0)))
+    assert (!box1.isPointWithin(Point(1.0, 2.0)))
+    assert (!box1.isPointWithin(Point(0.5, 2.0)))
 
     val box2 = new Box ((0.0, 1.0, true), (0.0, 2.0)) // including upper bound for the 1st dimension
 
-    assert (box2.isPointWithin(new Point (1.0, 1.0)))
-    assert (!box2.isPointWithin(new Point (1.0, 2.0)))
-    assert (!box2.isPointWithin(new Point (0.5, 2.0)))
+    assert (box2.isPointWithin(Point(1.0, 1.0)))
+    assert (!box2.isPointWithin(Point(1.0, 2.0)))
+    assert (!box2.isPointWithin(Point(0.5, 2.0)))
 
     val box3 = new Box ((0.0, 1.0), (0.0, 2.0, true)) // including upper bound for the 2nd dimension
 
-    assert (!box3.isPointWithin(new Point (1.0, 1.0)))
-    assert (!box3.isPointWithin(new Point (1.0, 2.0)))
-    assert (box3.isPointWithin(new Point (0.5, 2.0)))
+    assert (!box3.isPointWithin(Point(1.0, 1.0)))
+    assert (!box3.isPointWithin(Point(1.0, 2.0)))
+    assert (box3.isPointWithin(Point(0.5, 2.0)))
 
     val box4 = new Box ((0.0, 1.0, true), (0.0, 2.0, true)) // including upper bound for both dimensions
 
-    assert (box4.isPointWithin(new Point (1.0, 1.0)))
-    assert (box4.isPointWithin(new Point (1.0, 2.0)))
-    assert (box4.isPointWithin(new Point (0.5, 2.0)))
+    assert (box4.isPointWithin(Point(1.0, 1.0)))
+    assert (box4.isPointWithin(Point(1.0, 2.0)))
+    assert (box4.isPointWithin(Point(0.5, 2.0)))
   }
 
   test("Box should report points lying outside of its bound are actually outside") {
     val box = new Box ((0.0, 1.0), (0.0, 2.0))
 
-    assert(!box.isPointWithin(new Point (-1.0, -1.0)))
-    assert(!box.isPointWithin(new Point (-1.0, 1.0)))
-    assert(!box.isPointWithin(new Point (-1.0, 3.0)))
-    assert(!box.isPointWithin(new Point (0.5, 3.0)))
-    assert(!box.isPointWithin(new Point (2.0, 3.0)))
-    assert(!box.isPointWithin(new Point (2.0, 1.0)))
-    assert(!box.isPointWithin(new Point (2.0, -1.0)))
-    assert(!box.isPointWithin(new Point (0.5, -1.0)))
+    assert(!box.isPointWithin(Point(-1.0, -1.0)))
+    assert(!box.isPointWithin(Point(-1.0, 1.0)))
+    assert(!box.isPointWithin(Point(-1.0, 3.0)))
+    assert(!box.isPointWithin(Point(0.5, 3.0)))
+    assert(!box.isPointWithin(Point(2.0, 3.0)))
+    assert(!box.isPointWithin(Point(2.0, 1.0)))
+    assert(!box.isPointWithin(Point(2.0, -1.0)))
+    assert(!box.isPointWithin(Point(0.5, -1.0)))
   }
 
   test("Box should split 4 times along its 1st dimension") {
@@ -172,7 +172,7 @@ class BoxSuite extends SuiteBase {
   }
 
   test("Box should construct a new box given a point and other box") {
-    val pt = new Point (7.0, 6.0)
+    val pt = Point(7.0, 6.0)
     val sizeBox = new Box ((0.0, 4.0), (0.0, 2.0))
 
     val testBox = Box (pt, sizeBox)

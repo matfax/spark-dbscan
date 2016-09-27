@@ -1,10 +1,8 @@
 package org.apache.spark.dbscan.spatial
 
-import org.apache.spark.dbscan.{DbscanSettings, RawDataSet, SuiteBase, TestDatasets}
-import org.apache.spark.rdd.RDD
 import org.apache.spark.dbscan.spatial.rdd.PartitioningSettings
-import org.apache.commons.math3.ml.distance.DistanceMeasure
-import org.apache.spark.dbscan.{DbscanSettings, TestDatasets}
+import org.apache.spark.dbscan.{DbscanSettings, SuiteBase, TestDatasets}
+import org.apache.spark.rdd.RDD
 
 class PartitionIndexSuite extends SuiteBase with TestDatasets with DistanceCalculation  {
 
@@ -55,9 +53,9 @@ class PartitionIndexSuite extends SuiteBase with TestDatasets with DistanceCalcu
     val boundingBox = new Box ((0.0, 3.0), (0.0, 2.0), (0.0, 2.0))
     val dbscanSettings = new DbscanSettings ().withEpsilon (0.5)
 
-    val points = Array (new Point (0.2, 0.2, 0.2), new Point (0.5, 0.5, 0.5),
-      new Point (2.2, 0.2, 0.2), new Point (2.2, 0.5, 0.5),
-      new Point (2.5, 1.5, 1.5))
+    val points = Array (Point(0.2, 0.2, 0.2), Point(0.5, 0.5, 0.5),
+      Point(2.2, 0.2, 0.2), Point(2.2, 0.5, 0.5),
+      Point(2.5, 1.5, 1.5))
 
     val idx = new PartitionIndex (boundingBox, dbscanSettings, new PartitioningSettings ())
     idx.populate (points)
@@ -79,8 +77,8 @@ class PartitionIndexSuite extends SuiteBase with TestDatasets with DistanceCalcu
     val dbscanSettings = new DbscanSettings ().withEpsilon (0.5)
 
     val boundingBox2D = new Box ((0.0, 4.0), (0.0, 4.0))
-    val points2D = Array (new Point (0.5, 0.5), new Point (1.5, 0.5), new Point (1.5, 1.5), new Point (3.5, 0.5),
-      new Point (1.5, 3.5), new Point (3.5, 3.5))
+    val points2D = Array (Point(0.5, 0.5), Point(1.5, 0.5), Point(1.5, 1.5), Point(3.5, 0.5),
+      Point(1.5, 3.5), Point(3.5, 3.5))
 
     val idx2D = new PartitionIndex (boundingBox2D, dbscanSettings, new PartitioningSettings ())
     idx2D.populate(points2D)
@@ -93,8 +91,8 @@ class PartitionIndexSuite extends SuiteBase with TestDatasets with DistanceCalcu
     checkNumberOfAdjacentBoxes(idx2D, points2D(5), 3)
 
     val boundingBox3D = new Box ((0.0, 4.0), (0.0, 4.0), (0.0, 4.0))
-    val points3D = Array (new Point (0.5, 0.5, 0.5), new Point (1.5, 0.5, 0.5), new Point (1.5, 1.5, 1.5), new Point (3.5, 0.5, 0.5),
-      new Point (1.5, 3.5, 0.5), new Point (3.5, 3.5, 3.5))
+    val points3D = Array (Point(0.5, 0.5, 0.5), Point(1.5, 0.5, 0.5), Point(1.5, 1.5, 1.5), Point(3.5, 0.5, 0.5),
+      Point(1.5, 3.5, 0.5), Point(3.5, 3.5, 3.5))
 
     val idx3D = new PartitionIndex (boundingBox3D, dbscanSettings, new PartitioningSettings ())
     idx3D.populate(points3D)

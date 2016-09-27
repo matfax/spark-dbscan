@@ -51,8 +51,8 @@ private [dbscan] class BoxCalculator (val data: RawDataSet) {
   def calculateBoundingBox: Box = new Box (calculateBounds (data, numberOfDimensions).toArray)
 
   private [dbscan] def calculateBounds (ds: RawDataSet, dimensions: Int): List[BoundsInOneDimension] = {
-    val minPoint = new Point (Array.fill (dimensions)(Double.MaxValue))
-    val maxPoint = new Point (Array.fill (dimensions)(Double.MinValue))
+    val minPoint = Point (Array.fill (dimensions)(Double.MaxValue))
+    val maxPoint = Point (Array.fill (dimensions)(Double.MinValue))
 
     val mins = fold (ds, minPoint, x => Math.min (x._1, x._2))
     val maxs = fold (ds, maxPoint, x => Math.max (x._1, x._2))
@@ -63,7 +63,7 @@ private [dbscan] class BoxCalculator (val data: RawDataSet) {
   private def fold (ds: RawDataSet, zeroValue: Point, mapFunction: ((Double, Double)) => Double) = {
     ds.fold(zeroValue) {
       (pt1, pt2) => {
-        new Point (pt1.coordinates.zip (pt2.coordinates).map ( mapFunction ).toArray)
+        Point (pt1.coordinates.zip (pt2.coordinates).map ( mapFunction ).toArray)
       }
     }
   }

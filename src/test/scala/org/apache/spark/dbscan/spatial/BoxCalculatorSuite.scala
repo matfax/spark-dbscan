@@ -9,9 +9,9 @@ class BoxCalculatorSuite extends SuiteBase {
 
 
   val dataset1 = sc.parallelize(Array (
-    new Point (2.5, 0), new Point (0, 1.5), new Point (4, 0.5), new Point (2.5, 2.0), // Border points
-    new Point (0.2, 0.2), new Point (0.2, 0.7), new Point (0.7, 0.2),                 // Close points within one box
-    new Point (2.8, 0.8), new Point (3.3, 0.8), new Point (2.8, 1.3)))                // Close points in different boxes
+    Point (2.5, 0), Point (0, 1.5), Point (4, 0.5), Point (2.5, 2.0), // Border points
+    Point (0.2, 0.2), Point (0.2, 0.7), Point (0.7, 0.2),                 // Close points within one box
+    Point (2.8, 0.8), Point (3.3, 0.8), Point (2.8, 1.3)))                // Close points in different boxes
 
 
 
@@ -83,8 +83,8 @@ class BoxCalculatorSuite extends SuiteBase {
 
     val boxTreeRoot = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
 
-    val points = Array (new Point (1.0, 1.5), new Point (3.0, 0.5), new Point (4.5, 0.5),
-      new Point (5.5, 0.5), new Point (6.5, 1.5))
+    val points = Array (Point(1.0, 1.5), Point(3.0, 0.5), Point(4.5, 0.5),
+      Point(5.5, 0.5), Point(6.5, 1.5))
 
     points.foreach ( pt => BoxCalculator.countOnePoint(pt, boxTreeRoot))
 
@@ -124,8 +124,8 @@ class BoxCalculatorSuite extends SuiteBase {
     val root1 = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
     val root2 = BoxCalculator.generateTreeOfBoxes(rootBox, partitioningSettings, dbscanSettings)
 
-    val partition1 = Array (new Point (1.0, 1.5), new Point (5.5, 0.5))
-    val partition2 = Array (new Point (3.0, 0.5), new Point (4.5, 0.5), new Point (6.5, 1.5))
+    val partition1 = Array (Point(1.0, 1.5), Point(5.5, 0.5))
+    val partition2 = Array (Point(3.0, 0.5), Point(4.5, 0.5), Point(6.5, 1.5))
 
     val counts1 = BoxCalculator.countPointsInOnePartition(root1, partition1.iterator).toArray
     val counts2 = BoxCalculator.countPointsInOnePartition(root2, partition2.iterator).toArray

@@ -16,7 +16,7 @@ class SuiteBase extends FunSuite with Matchers with BeforeAndAfterEach with Logg
       rawData.map (
         line => {
           val split = line.split(",")
-          new Point (Array (split(0).toDouble, split(1).toDouble))
+          Point (Array (split(0).toDouble, split(1).toDouble))
         }
       )
 
@@ -35,7 +35,7 @@ class SuiteBase extends FunSuite with Matchers with BeforeAndAfterEach with Logg
   }
 
   def create2DPoint (x: Double, y: Double, idx: PointId = 0): Point = {
-    new Point ( new PointCoordinates (Array (x, y)), idx, 1, Math.sqrt (x*x+y*y))
+    Point ( new PointCoordinates (Array (x, y)), idx, 1, Math.sqrt (x*x+y*y))
   }
 
   def create2DPointWithSortKey (x: Double, y: Double, idx: PointId = 0): (PointSortKey, Point) = {

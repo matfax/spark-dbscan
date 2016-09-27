@@ -48,7 +48,7 @@ val settings: DbscanSettings)
     }
     else if (neighborCountsWithoutNoise.nonEmpty && !settings.treatBorderPointsAsNoise) {
 
-      // If there is not enough surrounding points, then the new point is a border point of a cluster
+      // If there is not enough surrounding points, then the Pointis a border point of a cluster
       // In this case, the prediction depends on treatBorderPointsAsNoise flag.
       // If it allows assigning border points to clusters, then the new point will be assigned to the cluster
       // If there are many clusters, then one of them will be chosen arbitrarily

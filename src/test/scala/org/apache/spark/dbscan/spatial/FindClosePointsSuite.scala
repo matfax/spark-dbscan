@@ -6,16 +6,16 @@ import org.apache.spark.dbscan.{SuiteBase, DbscanSettings}
 
 class FindClosePointsSuite extends SuiteBase {
   val dataset1 = sc.parallelize(Array (
-    new Point (0.0, 0.0), new Point (0.5, 4.0), new Point (4.0, 2.5),
-    new Point (0.5, 0.5), new Point (0.5, 0.9), new Point (0.9, 0.9),
-    new Point (0.5, 1.3),
-    new Point (1.1, 0.9),
-    new Point (1.1, 1.1), new Point (1.3, 1.3),
-    new Point (2.5, 1.5), new Point (2.9, 1.5), new Point (3.3, 1.5)
+    Point(0.0, 0.0), Point(0.5, 4.0), Point(4.0, 2.5),
+    Point(0.5, 0.5), Point(0.5, 0.9), Point(0.9, 0.9),
+    Point(0.5, 1.3),
+    Point(1.1, 0.9),
+    Point(1.1, 1.1), Point(1.3, 1.3),
+    Point(2.5, 1.5), Point(2.9, 1.5), Point(3.3, 1.5)
   ))
 
-  val dataset1_1 = sc.parallelize(Array ( new Point (0.0, 0.0), new Point (1.0, 0.0),
-      new Point (0.5, 1.0), new Point (0.5, 0.5), new Point (0.5, 5.0) ))
+  val dataset1_1 = sc.parallelize(Array ( Point(0.0, 0.0), Point(1.0, 0.0),
+      Point(0.5, 1.0), Point(0.5, 0.5), Point(0.5, 5.0) ))
 
   val settings = new DbscanSettings ().withEpsilon (0.4)
 

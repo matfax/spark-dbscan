@@ -1,15 +1,10 @@
 package org.apache.spark.dbscan.util
 
-import java.lang.Math
-
-import org.apache.spark.dbscan.spatial.{Box, Point, PointSortKey}
-import org.apache.spark.broadcast.Broadcast
 import org.apache.commons.math3.ml.distance.DistanceMeasure
-import org.apache.spark.rdd.RDD
+import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.dbscan._
-import org.apache.spark.dbscan.spatial.Point
-
-import scala.Some
+import org.apache.spark.dbscan.spatial.{Box, Point, PointSortKey}
+import org.apache.spark.rdd.RDD
 
 private [dbscan] class PointIndexer (val numberOfPartitions: Int, val currentPartition: Int) {
 
@@ -38,7 +33,7 @@ private [dbscan] object PointIndexer {
       distanceMeasure: DistanceMeasure): RDD[(PointSortKey, Point)] = {
 
     val numPartitions = data.partitions.length
-    val origin = new Point (Array.fill (dimensions.value)(0.0))
+    val origin = Point (Array.fill (dimensions.value)(0.0))
 
     data.mapPartitionsWithIndex( (partitionIndex, points) => {
 
@@ -54,7 +49,7 @@ private [dbscan] object PointIndexer {
           case _ => 0 // throw an exception?
         }
 
-        val newPoint = new Point (pt.coordinates, pointIndex, boxId, distanceFromOrigin,
+        val newPoint = Point (pt.coordinates, pointIndex, boxId, distanceFromOrigin,
             pt.precomputedNumberOfNeighbors, pt.clusterId)
 
         (new PointSortKey (newPoint), newPoint)

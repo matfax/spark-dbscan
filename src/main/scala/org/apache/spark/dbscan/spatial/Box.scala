@@ -93,7 +93,7 @@ private [dbscan] class Box (val bounds: Array[BoundsInOneDimension], val boxId: 
 
   private [dbscan] def calculateCenter (b: Array[BoundsInOneDimension]): Point = {
     val centerCoordinates = b.map ( x => x.lower + (x.upper - x.lower) / 2 )
-    new Point (centerCoordinates)
+    Point (centerCoordinates)
   }
 
   def addAdjacentBox (b: Box) = {

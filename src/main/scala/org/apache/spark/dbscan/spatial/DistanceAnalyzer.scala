@@ -48,7 +48,7 @@ private [dbscan] class DistanceAnalyzer (
           x => {
             assert (x._1._1.pointId == x._2._1.pointId)
 
-            val newPt = new Point (x._1._2).withNumberOfNeighbors(x._2._2)
+            val newPt = Point(x._1._2).withNumberOfNeighbors(x._2._2)
             (new PointSortKey (newPt), newPt)
           }
         }
