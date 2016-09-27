@@ -14,7 +14,7 @@ class CommandLineParsingSuite extends DbscanSuiteBase {
   val customDistanceMeasureClassName = "org.apache.commons.math3.ml.distance.ManhattanDistance"
   val numBuckets = 100
 
-  val requiredArgs = Array ("--ds-master", masterUrl, "--ds-jar", jar, "--ds-input", inputPath, "--ds-output", outputPath)
+  val requiredArgs = Array ("--ds-master", masterUrl, "--ds-input", inputPath, "--ds-output", outputPath)
   val dbscanAdditionalArgs = Array ("--eps", eps.toString, "--numPts", minPts.toString)
   val distanceMeasureArg = Array ("--distanceMeasure", customDistanceMeasureClassName)
   val borderPointsAsNoiseArg = Array ("--borderPointsAsNoise", "1")
@@ -59,7 +59,6 @@ class CommandLineParsingSuite extends DbscanSuiteBase {
 
   def assertThatCommonRequiredArgumentsWereFound [C <: CommonArgs] (parser: CommonArgsParser[C]) {
     parser.args.masterUrl should equal (masterUrl)
-    parser.args.jar should equal (jar)
     parser.args.inputPath should equal (inputPath)
     parser.args.outputPath should equal (outputPath)
   }

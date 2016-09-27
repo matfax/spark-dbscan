@@ -11,12 +11,6 @@ private [dbscan] class CommonArgsParser [C <: CommonArgs] (val args: C, programN
     .valueName ("<url>")
     .text ("Master URL")
 
-  opt[String] ("ds-jar")
-    .foreach { args.jar = _ }
-    .required ()
-    .valueName ("<jar>")
-    .text ("Path to dbscan_prototype.jar which is visible to all nodes in your cluster")
-
   opt[String] ("ds-input")
     .foreach { args.inputPath = _ }
     .required()

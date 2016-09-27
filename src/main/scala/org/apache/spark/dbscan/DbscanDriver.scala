@@ -2,9 +2,9 @@ package org.apache.spark.dbscan
 
 import org.apache.spark.dbscan.spatial.rdd.PartitioningSettings
 import org.apache.spark.dbscan.util.commandLine._
-import org.apache.spark.dbscan.util.debug.{Clock, DebugHelper}
+import org.apache.spark.dbscan.util.debug.Clock
 import org.apache.spark.dbscan.util.io.IOHelper
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.SparkSession
 
 /** A driver program which runs DBSCAN clustering algorithm
  *
@@ -40,18 +40,7 @@ object DbscanDriver {
 
       val clock = new Clock ()
 
-
-      val conf = new SparkConf()
-        .setMaster(argsParser.args.masterUrl)
-        .setAppName("DBSCAN")
-        .setJars(Array(argsParser.args.jar))
-
-      if (argsParser.args.debugOutputPath.isDefined) {
-        conf.set (DebugHelper.DebugOutputPath, argsParser.args.debugOutputPath.get)
-      }
-
-
-      val sc = new SparkContext(conf)
+      val sc = SparkSession.builder.master(argsParser.args.masterUrl).appName("DBSCAN").getOrCreate().sparkContext
 
       val data = IOHelper.readDataset(sc, argsParser.args.inputPath)
       val settings = new DbscanSettings ()
