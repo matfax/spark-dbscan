@@ -2,7 +2,8 @@ package org.apache.spark.dbscan.spatial
 
 import org.apache.spark.dbscan.DbscanSettings
 import org.apache.spark.dbscan.util.math.DoubleComparisonOperations._
-import org.apache.spark.dbscan.DbscanSettings
+
+import scala.language.implicitConversions
 
 /** Represents lower and upper bound along each dimension. Very similar to the Range class
   * 

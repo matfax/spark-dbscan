@@ -17,7 +17,7 @@ private [dbscan] trait DistanceCalculation {
 
   protected def isPointCloseToAnyBound (pt: Point, box: Box, threshold: Double): Boolean = {
 
-    (0 until pt.coordinates.size).exists( i => isPointCloseToBound (pt, box.bounds(i), i, threshold))
+    pt.coordinates.indices.exists(i => isPointCloseToBound (pt, box.bounds(i), i, threshold))
   }
 
   protected def isPointCloseToBound (pt: Point, bound: BoundsInOneDimension, dimension: Int, threshold: Double)

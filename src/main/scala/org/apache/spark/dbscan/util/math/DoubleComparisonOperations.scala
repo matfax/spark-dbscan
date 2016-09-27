@@ -1,5 +1,7 @@
 package org.apache.spark.dbscan.util.math
 
+import scala.language.implicitConversions
+
 private [dbscan] class DoubleComparisonOperations (val originalValue: Double) {
 
   def ~~ (that: Double): Boolean = {

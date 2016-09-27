@@ -1,16 +1,15 @@
 package org.apache.spark.dbscan.exploratoryAnalysis
 
-import org.apache.spark.rdd.RDD
-import org.apache.spark.SparkContext._
-
-import scala.collection.mutable.ArrayBuffer
+import org.apache.commons.math3.ml.distance.DistanceMeasure
 import org.apache.spark.dbscan.DbscanSettings
 import org.apache.spark.dbscan.spatial.DistanceAnalyzer
-import org.apache.commons.math3.ml.distance.DistanceMeasure
-import org.apache.spark.dbscan.util.io.IOHelper
 import org.apache.spark.dbscan.spatial.rdd.PointsPartitionedByBoxesRDD
 import org.apache.spark.dbscan.util.debug.Clock
 import org.apache.spark.dbscan.util.io.IOHelper
+import org.apache.spark.rdd.RDD
+
+import scala.collection.mutable.ArrayBuffer
+import scala.language.implicitConversions
 
 /** Useful functions for exploratory analysis
  *
