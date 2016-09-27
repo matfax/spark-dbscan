@@ -12,47 +12,77 @@ import org.apache.spark.dbscan.{ClusterId, DbscanModel}
   * @param precomputedNumberOfNeighbors Number of point's neighbors
   * @param clusterId ID of a cluster which this points belongs to
   */
-class Point (
-    val coordinates: PointCoordinates,
-    val pointId: PointId = 0,
-    val boxId: BoxId = 0,
-    val distanceFromOrigin: Double = 0.0,
-    val precomputedNumberOfNeighbors: Long = 0,
-    val clusterId: ClusterId = DbscanModel.UndefinedCluster) extends Serializable with Ordered[Point] {
+case class Point(coordinates: PointCoordinates,
+                 pointId: PointId = 0,
+                 boxId: BoxId = 0,
+                 distanceFromOrigin: Double = 0.0,
+                 precomputedNumberOfNeighbors: Long = 0,
+                 clusterId: ClusterId = DbscanModel.UndefinedCluster)
+    extends Serializable
+    with Ordered[Point] {
 
-  def this (coords: Array[Double]) = this (new PointCoordinates (coords))
+  def this(coords: Array[Double]) = this(new PointCoordinates(coords))
 
-  def this (pt: Point) = this (pt.coordinates, pt.pointId, pt.boxId, pt.distanceFromOrigin,
-      pt.precomputedNumberOfNeighbors,  pt.clusterId)
+  def apply(coords: Array[Double]): Point = this(coords)
 
-  def this (coords: Double*) = this (new PointCoordinates (coords.toArray))
+  def this(pt: Point) =
+    this(pt.coordinates,
+         pt.pointId,
+         pt.boxId,
+         pt.distanceFromOrigin,
+         pt.precomputedNumberOfNeighbors,
+         pt.clusterId)
 
-  def withPointId (newId: PointId) = {
-    new Point (this.coordinates, newId, this.boxId, this.distanceFromOrigin,
-        this.precomputedNumberOfNeighbors,  this.clusterId)
+  def this(coords: Double*) = this(new PointCoordinates(coords.toArray))
+
+  def apply(coords: Double*): Point = this(coords: _*)
+
+  def withPointId(newId: PointId) = {
+    Point(this.coordinates,
+      newId,
+      this.boxId,
+      this.distanceFromOrigin,
+      this.precomputedNumberOfNeighbors,
+      this.clusterId)
   }
 
-  def withBoxId (newBoxId: BoxId) = {
-    new Point (this.coordinates, this.pointId, newBoxId, this.distanceFromOrigin,
-        this.precomputedNumberOfNeighbors,  this.clusterId)
+  def withBoxId(newBoxId: BoxId) = {
+    Point(this.coordinates,
+      this.pointId,
+      newBoxId,
+      this.distanceFromOrigin,
+      this.precomputedNumberOfNeighbors,
+      this.clusterId)
   }
 
-  def withDistanceFromOrigin (newDistance: Double) = {
-    new Point (this.coordinates, this.pointId, this.boxId, newDistance,
-        this.precomputedNumberOfNeighbors,  this.clusterId)
+  def withDistanceFromOrigin(newDistance: Double) = {
+    Point(this.coordinates,
+      this.pointId,
+      this.boxId,
+      newDistance,
+      this.precomputedNumberOfNeighbors,
+      this.clusterId)
   }
 
-  def withNumberOfNeighbors (newNumber: Long) = {
-    new Point (this.coordinates, this.pointId, this.boxId, this.distanceFromOrigin, newNumber,
-       this.clusterId)
+  def withNumberOfNeighbors(newNumber: Long) = {
+    Point(this.coordinates,
+      this.pointId,
+      this.boxId,
+      this.distanceFromOrigin,
+      newNumber,
+      this.clusterId)
   }
 
-  def withClusterId (newId: ClusterId) = {
-    new Point (this.coordinates, this.pointId, this.boxId, this.distanceFromOrigin, this.precomputedNumberOfNeighbors,
+  def withClusterId(newId: ClusterId) = {
+    Point(this.coordinates,
+      this.pointId,
+      this.boxId,
+      this.distanceFromOrigin,
+      this.precomputedNumberOfNeighbors,
       newId)
   }
 
-  override def equals (that: Any): Boolean = {
+  override def equals(that: Any): Boolean = {
 
     that match {
       case point: Point =>
@@ -64,17 +94,15 @@ class Point (
     }
   }
 
-  override def hashCode (): Int = {
+  override def hashCode(): Int = {
     coordinates.hashCode() // We take only coordinates into account
-                           // and don't care about other attributes
+    // and don't care about other attributes
   }
 
   override def toString: String = {
     "Point at (" + coordinates.mkString(", ") + "); id = " + pointId + "; box = " + boxId +
       "; cluster = " + clusterId + "; neighbors = " + precomputedNumberOfNeighbors
   }
-
-  def canEqual(other: Any) = other.isInstanceOf[Point]
 
   override def compare(that: Point): Int = {
     var result = 0
