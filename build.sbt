@@ -36,3 +36,5 @@ publishTo := Some("Local Nexus" at "http://localhost:8081/content/repositories/s
 // fun fact the first parameter in Credentials MUST read EXACTLY:
 // "Sonatype Nexus Repository Manager"
 credentials += Credentials("Sonatype Nexus Repository Manager", "localhost", "deployment", "deployment123")
+
+scalacOptions += "-target:jvm-1.8"
